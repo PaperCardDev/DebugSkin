@@ -1,0 +1,15 @@
+name: DebugSkin
+version: '${project.version}'
+main: cn.paper_card.debug_skin.DebugSkin
+api-version: '1.20'
+author: Paper99
+
+folia-supported: true
+
+commands:
+  debug-skin:
+    permission: debug-skin.command
+
+permissions:
+  debug-skin.command:
+    default: op
