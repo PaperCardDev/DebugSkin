@@ -9,6 +9,7 @@ folia-supported: true
 commands:
   debug-skin:
     permission: debug-skin.command
+    aliases: skin
 
 permissions:
   debug-skin.command:

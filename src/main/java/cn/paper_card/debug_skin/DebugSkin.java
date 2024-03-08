@@ -2,6 +2,8 @@ package cn.paper_card.debug_skin;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
+import com.github.Anon8281.universalScheduler.UniversalScheduler;
+import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -10,6 +12,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.profile.PlayerTextures;
 import org.jetbrains.annotations.NotNull;
@@ -18,6 +21,11 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 
 public final class DebugSkin extends JavaPlugin {
+    private final @NotNull TaskScheduler scheduler;
+
+    public DebugSkin() {
+        this.scheduler = UniversalScheduler.getScheduler(this);
+    }
 
     @Override
     public void onEnable() {
@@ -26,7 +34,17 @@ public final class DebugSkin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        this.scheduler.cancelTasks(this);
+    }
+
+    @NotNull TaskScheduler getScheduler() {
+        return this.scheduler;
+    }
+
+    @NotNull Permission addPermission(@NotNull String name) {
+        final Permission p = new Permission(name);
+        getServer().getPluginManager().addPermission(p);
+        return p;
     }
 
     void appendPrefix(@NotNull TextComponent.Builder builder) {
@@ -40,6 +58,14 @@ public final class DebugSkin extends JavaPlugin {
         this.appendPrefix(text);
         text.appendSpace();
         text.append(Component.text(error).color(NamedTextColor.RED));
+        sender.sendMessage(text.build());
+    }
+
+    void sendInfo(@NotNull CommandSender sender, @NotNull String info) {
+        final TextComponent.Builder text = Component.text();
+        this.appendPrefix(text);
+        text.appendSpace();
+        text.append(Component.text(info).color(NamedTextColor.GREEN));
         sender.sendMessage(text.build());
     }
 
